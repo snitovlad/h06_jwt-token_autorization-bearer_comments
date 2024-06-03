@@ -9,6 +9,7 @@ import { CreateUserModel } from "../../models/users-model/CreateUseerModel"
 import { UserViewModel } from "../../models/users-model/UserViewModel"
 import { ErrorsViewModel, errorMessage } from "../../models/errors-models/ErrorsViewModel"
 import { usersService } from "../../services/users/users-service"
+import { SETTINGS } from '../../settings';
 
 export const usersController = {
 
@@ -18,7 +19,7 @@ export const usersController = {
 
         const allUsers = await usersQueryRepository.findAllUsers(sanitizedQuery)
         res
-            .status(200)
+            .status(SETTINGS.HTTP_STATUSES.OK_200)
             .json(allUsers)
     },
 
@@ -30,13 +31,13 @@ export const usersController = {
         const createdInfo = await usersService.createUser(req.body.login, req.body.password, req.body.email)
         if (!createdInfo.id) {
             res
-                .status(400)
+                .status(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
                 .json(createdInfo)
             return
         }
         const newUser = await usersQueryRepository.findUser(createdInfo.id.toString())
         res
-            .status(201)
+            .status(SETTINGS.HTTP_STATUSES.CREATED_201)
             .json(newUser)
     },
 
@@ -44,10 +45,10 @@ export const usersController = {
 
         const isDelete = await usersService.deleteUser(req.params.id)
         if (isDelete) {
-            res.sendStatus(204)
+            res.sendStatus(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
         }
         else {
-            res.sendStatus(404)
+            res.sendStatus(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
         }
     }
 }

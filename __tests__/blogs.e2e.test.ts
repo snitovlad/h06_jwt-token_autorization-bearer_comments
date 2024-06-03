@@ -23,7 +23,7 @@ describe('/blogs', () => {
     it('should return 200 and empty array', async () => {
         const res = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         console.log(res.body.items)
         expect(res.body.items.length).toBe(0)
     })
@@ -36,7 +36,7 @@ describe('/blogs', () => {
 
         const res1 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         //console.log(res1.body)
         expect(res1.body.items.length).toBe(1)
         expect(res1.body.items[0]).toEqual(res.body)
@@ -46,7 +46,7 @@ describe('/blogs', () => {
         const nonExitingId = (new ObjectId()).toString()
         const res = await req
             .get(SETTINGS.PATH.BLOGS + '/' + nonExitingId) //нет такого id
-            .expect(404) // проверка на ошибку
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404) // проверка на ошибку
     })
 
     //отфильтруем блоги по имени
@@ -59,12 +59,12 @@ describe('/blogs', () => {
 
         const res3 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items.length).toBe(2)
 
         const res4 = await req
             .get(SETTINGS.PATH.BLOGS + '?searchNameTerm=name2')
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res4.body.items).toEqual([res2.body])
     })
 
@@ -78,18 +78,18 @@ describe('/blogs', () => {
 
         const res3 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items.length).toBe(2)
 
         const res4 = await req
             .get(SETTINGS.PATH.BLOGS + '?sortBy=name&sortDirection=desc')
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res4.body.items[0]).toEqual(res2.body)
         expect(res4.body.items[1]).toEqual(res1.body)
 
         const res5 = await req
             .get(SETTINGS.PATH.BLOGS + '?sortBy=name&sortDirection=asc')
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res5.body.items[0]).toEqual(res1.body)
         expect(res5.body.items[1]).toEqual(res2.body)
     })
@@ -115,11 +115,11 @@ describe('/blogs', () => {
             .post(SETTINGS.PATH.BLOGS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(newBlog) // отправка данных
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         const res1 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res1.body.items).toEqual([])
     })
 
@@ -133,10 +133,10 @@ describe('/blogs', () => {
             .post(SETTINGS.PATH.BLOGS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(newBlog) // отправка данных
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
         const res1 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res1.body.items).toEqual([])
     })
 
@@ -151,7 +151,7 @@ describe('/blogs', () => {
             .post(SETTINGS.PATH.BLOGS + '/' + res.body.id + '/posts')
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(newPost) // отправка данных
-            .expect(201)
+            .expect(SETTINGS.HTTP_STATUSES.CREATED_201)
         expect(res1.body.title).toEqual(newPost.title)
         expect(res1.body.shortDescription).toEqual(newPost.shortDescription)
         expect(res1.body.content).toEqual(newPost.content)
@@ -159,7 +159,7 @@ describe('/blogs', () => {
         //найдем этот пост по id блога
         const res2 = await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id + '/posts')
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         console.log("Сравнение  ", res1.body, res2.body)
         expect([res1.body]).toEqual(res2.body.items)
 
@@ -182,12 +182,12 @@ describe('/blogs', () => {
             .put(SETTINGS.PATH.BLOGS + '/' + res.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updateBlog)
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         //проверим, что действительно не обновился блог
         const res2 = await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id)
-            .expect(200, res.body)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, res.body)
         expect(res2.body).toEqual(res.body)
     })
 
@@ -207,12 +207,12 @@ describe('/blogs', () => {
             .put(SETTINGS.PATH.BLOGS + '/' + res.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updateBlog)
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         //проверим, что действительно не обновился блог
         const res2 = await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id)
-            .expect(200, res.body)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, res.body)
         expect(res2.body).toEqual(res.body)
     })
 
@@ -229,12 +229,12 @@ describe('/blogs', () => {
             .put(SETTINGS.PATH.BLOGS + '/' + nonExitingId)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updateBlog)
-            .expect(404)
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
 
         //проверим, что действительно не обновился блог
         const res2 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([])
     })
 
@@ -255,11 +255,11 @@ describe('/blogs', () => {
             .put(SETTINGS.PATH.BLOGS + '/' + res.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updateBlog)
-            .expect(204)
+            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
         //проверим, что действительно обновился блог
         const res2 = await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id)
-            .expect(200, {
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, {
                 ...res.body,
                 name: updateBlog.name,
                 description: updateBlog.description,
@@ -276,18 +276,18 @@ describe('/blogs', () => {
         //проверили, что блог есть в базе данных
         const res1 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res1.body.items).toEqual([res.body])
 
         //удалим его
         await req
             .delete(SETTINGS.PATH.BLOGS + '/' + res.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(204)
+            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
         //проверим, что действительно удалился
         const res2 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([])
     })
 
@@ -301,17 +301,17 @@ describe('/blogs', () => {
         //проверили, что блог есть в базе данных
         const res1 = await req
             .get(SETTINGS.PATH.BLOGS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res1.body.items).toEqual([res.body])
 
         await req
             .delete(SETTINGS.PATH.BLOGS + '/' + nonExitingId)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(404)
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
         //проверим, что ничего не удалилось
         await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id)
-            .expect(200, res.body)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, res.body)
     })
 })
 

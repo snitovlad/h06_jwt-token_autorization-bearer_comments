@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import { deleteAllDataRepository } from '../../repositories/testing/deleteAllData-repository';
+import { SETTINGS } from '../../settings';
 
 export const deleteAllData = (req: Request, res: Response) => {
 
     try {
         deleteAllDataRepository.deleteAllData()
-        res.sendStatus(204)
+        res.sendStatus(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
     } catch (e) {
-        res.sendStatus(500)
+        res.sendStatus(SETTINGS.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500)
     }
 }

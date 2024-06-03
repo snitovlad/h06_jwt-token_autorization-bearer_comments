@@ -22,7 +22,7 @@ describe('/users', () => {
         const res = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         console.log(res.body.items)
         expect(res.body.items.length).toBe(0)
     })
@@ -30,7 +30,7 @@ describe('/users', () => {
     it('should return 401 and empty array without autorization', async () => {
         const res = await req
             .get(SETTINGS.PATH.USERS)
-            .expect(401)
+            .expect(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)
     })
 
     //не должен создать user с некорректными входными данными
@@ -44,12 +44,12 @@ describe('/users', () => {
             .post(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(newUser) // отправка данных
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         const res1 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res1.body.items).toEqual([])
     })
 
@@ -61,7 +61,7 @@ describe('/users', () => {
         const res1 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         //console.log(res1.body)
         expect(res1.body.items.length).toBe(1)
         expect(res1.body.items[0]).toEqual(res.body)
@@ -80,12 +80,12 @@ describe('/users', () => {
             .post(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS }) //авторизация
             .send(newUser2) // отправка данных           
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         const res3 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         //console.log(res1.body)
         expect(res3.body.items.length).toBe(1)
         expect(res3.body.items[0]).toEqual(res1.body)
@@ -102,13 +102,13 @@ describe('/users', () => {
         const res3 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items.length).toBe(2)
 
         const res4 = await req
             .get(SETTINGS.PATH.USERS + `?searchLoginTerm=${newUser1.login}`)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res4.body.items).toEqual([res1.body])
     })
 
@@ -123,20 +123,20 @@ describe('/users', () => {
         const res3 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items.length).toBe(2)
 
         const res4 = await req
             .get(SETTINGS.PATH.USERS + '?sortBy=login&sortDirection=desc')
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res4.body.items[0]).toEqual(res2.body)
         expect(res4.body.items[1]).toEqual(res1.body)
 
         const res5 = await req
             .get(SETTINGS.PATH.USERS + '?sortBy=login&sortDirection=asc')
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res5.body.items[0]).toEqual(res1.body)
         expect(res5.body.items[1]).toEqual(res2.body)
     })
@@ -151,19 +151,19 @@ describe('/users', () => {
         const res2 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([res1.body])
 
         //удалим его
         await req
             .delete(SETTINGS.PATH.USERS + '/' + res1.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(204)
+            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
         //проверим, что действительно удалился
         const res3 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items).toEqual([])
     })
 
@@ -178,13 +178,13 @@ describe('/users', () => {
         const res2 = await req
             .get(SETTINGS.PATH.USERS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([res1.body])
 
         await req
             .delete(SETTINGS.PATH.USERS + '/' + nonExitingId)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(404)
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
         //проверим, что ничего не удалилось
         await req
             .get(SETTINGS.PATH.USERS + `?searchLoginTerm=${newUser1.login}`)

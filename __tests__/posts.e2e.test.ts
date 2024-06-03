@@ -24,7 +24,7 @@ describe('/posts', () => {
     it('should return 200 and empty array', async () => {
         const res = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         //console.log(res.body)
         expect(res.body.items.length).toBe(0)
     })
@@ -40,7 +40,7 @@ describe('/posts', () => {
         //setPostsDB(dataset1)
         const res2 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         //console.log(res.body)
         expect(res2.body.items.length).toBe(1)
         expect(res2.body.items[0]).toEqual(res1.body)
@@ -49,7 +49,7 @@ describe('/posts', () => {
     it('should return 404 for not exiting post', async () => {
         const res = await req
             .get(SETTINGS.PATH.POSTS + '/' + (new ObjectId()).toString()) //нет такого id
-            .expect(404) // проверка на ошибку
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404) // проверка на ошибку
     })
 
     //отсортируем посты по title в одну и в другую сторону
@@ -64,14 +64,14 @@ describe('/posts', () => {
 
         const res3 = await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id + '/posts' + '?sortBy=title&sortDirection=desc')
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items.length).toBe(2)
         expect(res3.body.items[0]).toEqual(res2.body)
         expect(res3.body.items[1]).toEqual(res1.body)
 
         const res4 = await req
             .get(SETTINGS.PATH.BLOGS + '/' + res.body.id + '/posts' + '?sortBy=title&sortDirection=asc')
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res4.body.items[0]).toEqual(res1.body)
         expect(res4.body.items[1]).toEqual(res2.body)
     })
@@ -108,11 +108,11 @@ describe('/posts', () => {
             .post(SETTINGS.PATH.POSTS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(newPost) // отправка данных
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         const res2 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([])
     })
 
@@ -130,11 +130,11 @@ describe('/posts', () => {
             .post(SETTINGS.PATH.POSTS)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(newPost) // отправка данных
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
 
         const res2 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([])
     })
 
@@ -158,11 +158,11 @@ describe('/posts', () => {
             .put(SETTINGS.PATH.POSTS + '/' + res1.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updatePost)
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
         //проверим, что действительно не обновился пост
         const res2 = await req
             .get(SETTINGS.PATH.POSTS + '/' + res1.body.id)
-            .expect(200, res1.body)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, res1.body)
         expect(res2.body).toEqual(res1.body)
     })
 
@@ -186,11 +186,11 @@ describe('/posts', () => {
             .put(SETTINGS.PATH.POSTS + '/' + res1.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updatePost)
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
         //проверим, что действительно не обновился пост
         const res2 = await req
             .get(SETTINGS.PATH.POSTS + '/' + res1.body.id)
-            .expect(200, res1.body)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, res1.body)
         expect(res2.body).toEqual(res1.body)
     })
 
@@ -214,7 +214,7 @@ describe('/posts', () => {
             .put(SETTINGS.PATH.POSTS + '/' + (new ObjectId()).toString())
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updatePost)
-            .expect(404)
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
     })
 
     //должен обновиться пост с корректными входными данными
@@ -237,11 +237,11 @@ describe('/posts', () => {
             .put(SETTINGS.PATH.POSTS + '/' + res1.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
             .send(updatePost)
-            .expect(204)
+            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
         //проверим, что действительно обновился пост
         const res3 = await req
             .get(SETTINGS.PATH.POSTS + '/' + res1.body.id)
-            .expect(200, {
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, {
                 ...res1.body,
                 title: updatePost.title,
                 shortDescription: updatePost.shortDescription,
@@ -261,17 +261,17 @@ describe('/posts', () => {
         //проверили, что пост есть в базе данных
         const res2 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([res1.body])
         //удалим его
         await req
             .delete(SETTINGS.PATH.POSTS + '/' + res1.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(204)
+            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
         //проверим, что действительно удалился
         const res3 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res3.body.items).toEqual([])
     })
 
@@ -287,17 +287,17 @@ describe('/posts', () => {
         //проверили, что пост есть в базе данных
         const res2 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([res1.body])
 
         await req
             .delete(SETTINGS.PATH.POSTS + '/' + (new ObjectId()).toString())
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS })
-            .expect(404)
+            .expect(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
         //проверим, что ничего не удалилось
         await req
             .get(SETTINGS.PATH.POSTS + '/' + res1.body.id)
-            .expect(200, res1.body)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200, res1.body)
     })
 
     //проверим неправильную авторизацию при удалении поста
@@ -312,17 +312,17 @@ describe('/posts', () => {
         //проверили, что пост есть в базе данных
         const res2 = await req
             .get(SETTINGS.PATH.POSTS)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([res1.body])
 
         await req
             .delete(SETTINGS.PATH.POSTS + '/' + res1.body.id)
             .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS + 'test' })
-            .expect(401)
+            .expect(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)
         //проверим, что ничего не удалилось
         await req
             .get(SETTINGS.PATH.POSTS + '/' + res1.body.id)
-            .expect(200)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
         expect(res2.body.items).toEqual([res1.body])
     })
 })

@@ -6,7 +6,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     //console.log(auth)
     if (!auth) {
         res
-            .status(401)
+            .status(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)
             .json({})
         return
     }
@@ -26,7 +26,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const codedAuth = buff2.toString('base64')
     if (auth.slice(6) !== codedAuth || auth.slice(0, 6) !== 'Basic ') {
         res
-            .status(401)
+            .status(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)
             .json({})
         return
     }

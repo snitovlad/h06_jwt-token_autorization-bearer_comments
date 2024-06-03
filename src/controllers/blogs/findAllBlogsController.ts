@@ -4,6 +4,7 @@ import { blogsQueryRepository } from "../../repositories/blogs/blogs-query-repos
 import { RequestWithQuery } from "../../models/requestTypes"
 import { BlogsViewModel } from "../../models/blogs-models/BlogsViewModel"
 import { queryDefaulBlogsValues } from '../../helper/queryDefaultValues';
+import { SETTINGS } from '../../settings';
 
 
 export const findAllBlogsController = async (
@@ -12,7 +13,7 @@ export const findAllBlogsController = async (
 
     const allBlogs = await blogsQueryRepository.findAllBlogs(sanitizedQuery)
     res
-        .status(200)
+        .status(SETTINGS.HTTP_STATUSES.OK_200)
         .json(allBlogs)
 }
 // as {[key: string]: number | undefined}

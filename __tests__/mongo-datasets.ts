@@ -55,7 +55,7 @@ export const createNewEntity = async (newBlog: CreateBlogModel | CreatePostModel
         .post(path)
         .set({ 'authorization': 'Basic ' + SETTINGS.ADMIN_AUTH_FOR_TESTS }) //авторизация
         .send(newBlog) // отправка данных           
-        .expect(201)
+        .expect(SETTINGS.HTTP_STATUSES.CREATED_201)
 }
 //=====================================================
 export const createNewPost = (id: string): CreatePostModel => {

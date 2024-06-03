@@ -7,6 +7,7 @@ import { URIParamsBlogIdModel } from "../../models/blogs-models/URIParamsBlogIdM
 import { CreatePostForBlogModel } from "../../models/posts-models/CreatePostForBlogModel"
 import { blogsQueryRepository } from "../../repositories/blogs/blogs-query-repository"
 import { postsService } from "../../services/posts/posts-service"
+import { SETTINGS } from "../../settings"
 
 export const createPostForBlogController = async (
     req: RequestWithParamsAndBody<URIParamsBlogIdModel, CreatePostForBlogModel>,
@@ -14,7 +15,7 @@ export const createPostForBlogController = async (
 
     const foundBlog = await blogsQueryRepository.findBlog(req.params.id)
     if (!foundBlog) {
-        res.sendStatus(404)
+        res.sendStatus(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
         return
     }
 
@@ -22,12 +23,12 @@ export const createPostForBlogController = async (
 
     if (!createdInfo.id) {
         res
-            .status(500)
+            .status(SETTINGS.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500)
             .json({})
         return
     }
     const newPost = await postsQueryRepository.findPost(createdInfo.id.toString())
     res
-        .status(201)
+        .status(SETTINGS.HTTP_STATUSES.CREATED_201)
         .json(newPost)
 }

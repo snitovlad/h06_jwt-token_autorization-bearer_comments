@@ -1,8 +1,6 @@
 import { clearTestDb, closeTestDb, connectToTestDb, createNewEntity, createNewUser1, createNewUser2 } from "./mongo-datasets"
 import { req } from './test-helpers';
 import { SETTINGS } from '../src/settings'
-import { CreateUserModel } from "../src/models/users-model/CreateUseerModel";
-import { ObjectId } from "mongodb";
 
 describe('/auth', () => {
 
@@ -31,7 +29,7 @@ describe('/auth', () => {
         const res1 = await req
             .post(SETTINGS.PATH.AUTH + '/login')
             .send(authUser)
-            .expect(204)
+            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
     })
 
     //не должен авторизоваться
@@ -47,7 +45,7 @@ describe('/auth', () => {
         const res1 = await req
             .post(SETTINGS.PATH.AUTH + '/login')
             .send(authUser)
-            .expect(401)
+            .expect(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)
     })
 
     //не должен авторизоваться из-за некорректных данных
@@ -63,6 +61,6 @@ describe('/auth', () => {
         const res1 = await req
             .post(SETTINGS.PATH.AUTH + '/login')
             .send(authUser)
-            .expect(400)
+            .expect(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
     })
 })

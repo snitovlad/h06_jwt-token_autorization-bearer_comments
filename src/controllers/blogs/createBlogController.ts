@@ -5,6 +5,7 @@ import { BlogViewModel } from '../../models/blogs-models/BlogViewModel'
 import { RequestWithBody } from '../../models/requestTypes'
 import { blogsQueryRepository } from '../../repositories/blogs/blogs-query-repository'
 import { blogsService } from '../../services/blogs/blogs-service'
+import { SETTINGS } from '../../settings'
 
 export const createBlogController = async (
     req: RequestWithBody<CreateBlogModel>,
@@ -13,12 +14,12 @@ export const createBlogController = async (
     const createdInfo = await blogsService.createdBlog(req.body) //здесь createdInfo = {id: ObjectId()}
     if (!createdInfo.id) {
         res
-            .status(500)
+            .status(SETTINGS.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500)
             .json({})
         return
     }
     const newBlog = await blogsQueryRepository.findBlog(createdInfo.id.toString())
     res
-        .status(201)
+        .status(SETTINGS.HTTP_STATUSES.CREATED_201)
         .json(newBlog)
 }

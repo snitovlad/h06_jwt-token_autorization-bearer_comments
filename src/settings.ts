@@ -20,7 +20,17 @@ export const SETTINGS = {
     USER_COLLECTION_NAME: process.env.USER_COLLECTION_NAME || '',
     MONGO_URL: process.env.MONGO_URL || 'mongodb://0.0.0.0:27017',
     ADMIN_AUTH: process.env.ADMIN_AUTH || '',
-    ADMIN_AUTH_FOR_TESTS: process.env.ADMIN_AUTH_FOR_TESTS || ''
+    ADMIN_AUTH_FOR_TESTS: process.env.ADMIN_AUTH_FOR_TESTS || '',
+    HTTP_STATUSES: {
+        OK_200: 200,
+        CREATED_201: 201,
+        N0_CONTENT_204: 204,
+        BAD_REQUEST_400: 400,
+        UNAUTHORIZED_401: 401,
+        FORBIDDEN_403: 403,
+        NOT_FOUND_404: 404,
+        INTERNAL_SERVER_ERROR_500: 500
+    }
 }
 
 

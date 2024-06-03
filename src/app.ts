@@ -14,7 +14,7 @@ app.use(express.json()) // добавление ко всем реквестам
 
 app.get('/', (req, res) => {
     // эндпоинт, который будет показывать на верселе какая версия бэкэнда сейчас залита
-    res.status(200).json({ version: '1.0' })
+    res.status(SETTINGS.HTTP_STATUSES.OK_200).json({ version: '1.0' })
 })
 app.use(SETTINGS.PATH.AUTH, authRouter)
 app.use(SETTINGS.PATH.BLOGS, blogsRouter)
