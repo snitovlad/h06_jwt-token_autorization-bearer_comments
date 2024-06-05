@@ -21,6 +21,7 @@ export const SETTINGS = {
     MONGO_URL: process.env.MONGO_URL || 'mongodb://0.0.0.0:27017',
     ADMIN_AUTH: process.env.ADMIN_AUTH || '',
     ADMIN_AUTH_FOR_TESTS: process.env.ADMIN_AUTH_FOR_TESTS || '',
+
     HTTP_STATUSES: {
         OK_200: 200,
         CREATED_201: 201,

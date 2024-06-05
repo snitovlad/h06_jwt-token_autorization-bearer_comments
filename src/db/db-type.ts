@@ -25,5 +25,5 @@ export type UserDBType = {
     email: string
     createdAt: string
     passwordHash: string
-    passwordSalt: string
+    //passwordSalt: string
 }

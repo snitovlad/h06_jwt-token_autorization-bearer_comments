@@ -1,3 +1,4 @@
+import { ErrorMessage, Result } from './../../common/types/result.type';
 import { URIParamsUserIdModel } from './../../models/users-model/URIParamsUserIdModel';
 import { Response } from "express"
 import { RequestWithBody, RequestWithParams, RequestWithQuery } from "../../models/requestTypes"
@@ -7,9 +8,10 @@ import { UsersViewModel } from "../../models/users-model/UsersViewModel"
 import { usersQueryRepository } from "../../repositories/users/users-query-repository"
 import { CreateUserModel } from "../../models/users-model/CreateUseerModel"
 import { UserViewModel } from "../../models/users-model/UserViewModel"
-import { ErrorsViewModel, errorMessage } from "../../models/errors-models/ErrorsViewModel"
+import { ErrorsViewModel } from "../../models/errors-models/ErrorsViewModel"
 import { usersService } from "../../services/users/users-service"
 import { SETTINGS } from '../../settings';
+import { ResultStatus } from '../../common/types/resultCode';
 
 export const usersController = {
 
@@ -25,20 +27,23 @@ export const usersController = {
 
     async createUser(
         req: RequestWithBody<CreateUserModel>,
-        res: Response<UserViewModel | null | ErrorsViewModel | { errorsMessages?: errorMessage[] }>) {
+        res: Response<UserViewModel | null | ErrorsViewModel | ErrorMessage>) {
 
-        //здесь createdInfo = {id: ObjectId()}
-        const createdInfo = await usersService.createUser(req.body.login, req.body.password, req.body.email)
-        if (!createdInfo.id) {
+        //здесь createdInfo = {status, errorMessage?, data?}
+        const createdInfo: Result<string> = await usersService.createUser(req.body.login, req.body.password, req.body.email)
+        if (createdInfo.status !== ResultStatus.Success) {
             res
                 .status(SETTINGS.HTTP_STATUSES.BAD_REQUEST_400)
-                .json(createdInfo)
+                .json(createdInfo.errorMessage)
             return
         }
-        const newUser = await usersQueryRepository.findUser(createdInfo.id.toString())
-        res
-            .status(SETTINGS.HTTP_STATUSES.CREATED_201)
-            .json(newUser)
+        if (createdInfo.data) { //if - т.к. id?
+            const newUser = await usersQueryRepository.findUser(createdInfo.data)
+
+            res
+                .status(SETTINGS.HTTP_STATUSES.CREATED_201)
+                .json(newUser)
+        }
     },
 
     async deleteUser(req: RequestWithParams<URIParamsUserIdModel>, res: Response) {
