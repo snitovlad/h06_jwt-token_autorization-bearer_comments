@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { updatePostController } from '../controllers/posts/updatePostController';
 import {
     inputBlogIdPostValidator, inputContentPostValidator, inputShortDescriptionPostValidator,
     inputTitlePostValidator

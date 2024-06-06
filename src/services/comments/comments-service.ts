@@ -5,26 +5,11 @@ import { usersMongoRepository } from "../../repositories/users/user-mongo-reposi
 import { commentsMongoRepository } from "../../repositories/comments/comments-mongo-repository";
 import { Result } from "../../common/types/result.type";
 import { ResultStatus } from "../../common/types/resultCode";
+import { UpdateCommentModel } from "../../models/comments/UpdareCommentModel";
 
 export const commentsService = {
 
-    async createComment(content: string, postId: string, userId: string): /*Promise<{ error?: string, id?: ObjectId }>*/
-        Promise<Result<string>> {
-        //{
-
-        //     const user = await usersMongoRepository.findUserById(id)
-        //     const newComment: CommentDBType = {
-        //         _id: new ObjectId(),
-        //         content: content,
-        //         commentatorInfo: {
-        //             userId: id,
-        //             userLogin: user?.login
-        //         },
-        //         createdAt: new Date().toISOString(),
-        //     }
-        //     const createdInfo = await commentsMongoRepository.createComment(newComment)
-        //     return createdInfo
-        // }
+    async createComment(content: string, postId: string, userId: string): Promise<Result<string>> {
 
         const user = await usersMongoRepository.findUserById(userId)
 
@@ -62,6 +47,67 @@ export const commentsService = {
         return {
             status: ResultStatus.Success,
             data: createdInfo.id?.toString()
+        }
+    },
+
+    async updateComment(commentId: string, input: UpdateCommentModel, userId: string): Promise<Result<boolean | { error?: string }>> {
+        const foundComment = await commentsMongoRepository.findCommentById(commentId)
+
+        if (!foundComment) return {
+            status: ResultStatus.NotFound,
+            errorMessage: {
+                errorMessages: [{
+                    message: 'the comment is not found',
+                    field: 'comment'
+                }]
+            }
+        }
+
+        if (foundComment.commentatorInfo.userId !== userId) return {
+            status: ResultStatus.Forbidden,
+            errorMessage: {
+                errorMessages: [{
+                    message: 'you can\'t edit this comment, you\'re not owner of this comment',
+                    field: 'comment'
+                }]
+            }
+        }
+
+        const updateInfo = await commentsMongoRepository.updateComment(commentId, input)
+
+        return {
+            status: ResultStatus.Success,
+            data: updateInfo
+        }
+    },
+
+    async deleteComment(commentId: string, userId: string): Promise<Result<boolean | { error?: string }>> {
+        const foundComment = await commentsMongoRepository.findCommentById(commentId)
+
+        if (!foundComment) return {
+            status: ResultStatus.NotFound,
+            errorMessage: {
+                errorMessages: [{
+                    message: 'the comment is not found',
+                    field: 'comment'
+                }]
+            }
+        }
+
+        if (foundComment.commentatorInfo.userId !== userId) return {
+            status: ResultStatus.Forbidden,
+            errorMessage: {
+                errorMessages: [{
+                    message: 'you can\'t delete this comment, you\'re not owner of this comment',
+                    field: 'comment'
+                }]
+            }
+        }
+
+        const deleteInfo = await commentsMongoRepository.deleteComment(commentId)
+        return {
+            status: ResultStatus.Success,
+            data: deleteInfo
         }
     }
 }

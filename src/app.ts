@@ -5,6 +5,7 @@ import { postsRouter } from './routers/postsRouter'
 import { testingRouter } from './routers/testingRouter'
 import { usersRouter } from './routers/usersRouter'
 import { authRouter } from './routers/authRouter'
+import { commentsRouter } from './routers/commentsRouter'
 //import cors from 'cors'
 
 
@@ -20,4 +21,6 @@ app.use(SETTINGS.PATH.AUTH, authRouter)
 app.use(SETTINGS.PATH.BLOGS, blogsRouter)
 app.use(SETTINGS.PATH.POSTS, postsRouter)
 app.use(SETTINGS.PATH.USERS, usersRouter)
+app.use(SETTINGS.PATH.COMMENTS, commentsRouter)
+
 app.use(SETTINGS.PATH.TESTING, testingRouter)

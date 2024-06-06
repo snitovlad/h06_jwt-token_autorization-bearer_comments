@@ -12,6 +12,7 @@ export const SETTINGS = {
         BLOGS: '/blogs',
         POSTS: '/posts',
         USERS: '/users',
+        COMMENTS: '/comments',
         TESTING: '/testing/all-data'
     },
     DB_NAME: process.env.DB_NAME || '',
