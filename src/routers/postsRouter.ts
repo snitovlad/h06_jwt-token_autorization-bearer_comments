@@ -1,8 +1,4 @@
 import { Router } from 'express'
-import { findAllPostsController } from '../controllers/posts/findAllPostsController';
-import { createPostController } from '../controllers/posts/createPostController';
-import { findPostController } from '../controllers/posts/findPostController';
-import { deletePostController } from '../controllers/posts/deletePostController';
 import { updatePostController } from '../controllers/posts/updatePostController';
 import {
     inputBlogIdPostValidator, inputContentPostValidator, inputShortDescriptionPostValidator,
@@ -12,6 +8,9 @@ import { inputCheckErrorsMiddleware } from '../middlewares/input-check-errors-mi
 import { authMiddleware } from '../middlewares/auth-middleware';
 import { inputIdValidator } from '../middlewares/input-id-validator';
 import { inputPageNumberQueryValidator, inputPageSizeQueryValidator, inputSortByQueryValidator, inputSortDirectionQueryValidator } from '../middlewares/inputQueryValidation';
+import { authBearerMiddleware } from '../middlewares/auth-bearer-middleware';
+import { postsController } from '../controllers/posts/postsController';
+import { inputContentCommentValidator } from '../middlewares/comment-validation-middleware';
 
 
 export const postsRouter = Router()
@@ -22,7 +21,7 @@ postsRouter.get('/',
     inputPageNumberQueryValidator(),
     inputPageSizeQueryValidator(),
     inputCheckErrorsMiddleware,
-    findAllPostsController)
+    postsController.findAllPosts)
 
 postsRouter.post('/',
     authMiddleware,
@@ -31,18 +30,18 @@ postsRouter.post('/',
     inputContentPostValidator(),
     inputBlogIdPostValidator(),
     inputCheckErrorsMiddleware,
-    createPostController)
+    postsController.createPost)
 
 postsRouter.get('/:id',
     inputIdValidator(),
     inputCheckErrorsMiddleware,
-    findPostController)
+    postsController.findPostById)
 
 postsRouter.delete('/:id',
     authMiddleware,
     inputIdValidator(),
     inputCheckErrorsMiddleware,
-    deletePostController)
+    postsController.deletePost)
 
 postsRouter.put('/:id',
     authMiddleware,
@@ -52,6 +51,18 @@ postsRouter.put('/:id',
     inputContentPostValidator(),
     inputBlogIdPostValidator(),
     inputCheckErrorsMiddleware,
-    updatePostController)
+    postsController.updatePost)
+
+postsRouter.post('/:id/comments',
+    authBearerMiddleware,
+    inputIdValidator(),
+    inputContentCommentValidator(),
+    inputCheckErrorsMiddleware,
+    postsController.createCommentForPost)
+
+postsRouter.get('/:id/comments',
+    inputIdValidator(),
+    inputCheckErrorsMiddleware,
+    postsController.findAllCommentsForPost)
 
 

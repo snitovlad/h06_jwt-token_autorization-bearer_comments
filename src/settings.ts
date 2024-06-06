@@ -18,9 +18,12 @@ export const SETTINGS = {
     BLOG_COLLECTION_NAME: process.env.BLOG_COLLECTION_NAME || '',
     POST_COLLECTION_NAME: process.env.POST_COLLECTION_NAME || '',
     USER_COLLECTION_NAME: process.env.USER_COLLECTION_NAME || '',
+    COMMENT_COLLECTION_NAME: process.env.COMMENT_COLLECTION_NAME || '',
     MONGO_URL: process.env.MONGO_URL || 'mongodb://0.0.0.0:27017',
     ADMIN_AUTH: process.env.ADMIN_AUTH || '',
     ADMIN_AUTH_FOR_TESTS: process.env.ADMIN_AUTH_FOR_TESTS || '',
+    JWT_SECRET: process.env.JWT_SECRET || '123',
+    JWT_TIME: process.env.JWT_TIME || '1h',
 
     HTTP_STATUSES: {
         OK_200: 200,

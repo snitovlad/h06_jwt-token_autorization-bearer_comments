@@ -3,6 +3,7 @@ import { SortDirection } from "mongodb"
 import { BlogsQueryModel } from "../models/blogs-models/BlogsQueryModel"
 import { PostsQueryModel } from "../models/posts-models/PostsQueryModel"
 import { UsersQueryModel } from '../models/users-model/UsersQueryModel';
+import { CommentsQueryModel } from '../models/comments/CommentsQueryModel';
 
 export type QueryDefaultModel = {
     sortBy?: string
@@ -39,5 +40,11 @@ export const queryDefaulUsersValues = (query: UsersQueryModel/*{[key: string]: n
         ...queryDefaulValues(query),
         searchLoginTerm: query.searchLoginTerm ? query.searchLoginTerm : null,
         searchEmailTerm: query.searchEmailTerm ? query.searchEmailTerm : null
+    }
+}
+
+export const queryDefaultCommentsValues = (query: CommentsQueryModel/*{[key: string]: number | undefined}*/) => {
+    return {
+        ...queryDefaulValues(query)
     }
 }

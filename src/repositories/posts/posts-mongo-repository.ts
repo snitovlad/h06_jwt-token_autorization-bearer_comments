@@ -2,7 +2,6 @@ import { ObjectId } from "mongodb"
 import { PostDBType } from "../../db/db-type"
 import { postCollection } from "../../db/mongo-db"
 import { UpdatePostModel } from "../../models/posts-models/UpdatePostModel"
-import { postsQueryRepository } from "./posts-query-repository"
 
 export const postsMongoRepository = {
 

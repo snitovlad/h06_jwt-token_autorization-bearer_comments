@@ -29,7 +29,7 @@ describe('/auth', () => {
         const res1 = await req
             .post(SETTINGS.PATH.AUTH + '/login')
             .send(authUser)
-            .expect(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
+            .expect(SETTINGS.HTTP_STATUSES.OK_200)
     })
 
     //не должен авторизоваться

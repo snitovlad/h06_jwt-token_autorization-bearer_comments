@@ -42,7 +42,6 @@ export const usersService = {
             createdAt: new Date().toISOString()
         }
         const userId = await usersMongoRepository.createUser(newUser)
-
         //возвращаем объект с информацией в контроллер
         return {
             status: ResultStatus.Success,

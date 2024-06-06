@@ -20,9 +20,14 @@ export const usersMongoRepository = {
         return deleteInfo.deletedCount === 1 //eсли 1 - значит true
     },
 
+    async findUserById(id: string) {
+        const user = await userCollection.findOne({ _id: new ObjectId(id) })
+        return user
+    },
+
     async findByLoginOrEmail(loginOrEmail: string) {
         const user = await userCollection.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] })
         return user
-    }
+    },
 
 }
