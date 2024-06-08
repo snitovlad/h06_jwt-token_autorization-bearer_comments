@@ -19,3 +19,8 @@ commentsRouter.delete('/:id',
     inputIdValidator(),
     inputCheckErrorsMiddleware,
     commentsController.deleteComment)
+
+commentsRouter.get('/:id',
+    inputIdValidator(),
+    inputCheckErrorsMiddleware,
+    commentsController.findCommentById)

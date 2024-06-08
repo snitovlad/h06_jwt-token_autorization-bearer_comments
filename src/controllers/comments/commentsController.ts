@@ -5,6 +5,7 @@ import { RequestWithParams, RequestWithParamsAndBody } from "../../models/reques
 import { commentsService } from "../../services/comments/comments-service"
 import { SETTINGS } from "../../settings"
 import { ResultStatus } from "../../common/types/resultCode"
+import { commentsQueryRepository } from "../../repositories/comments/comments-query-repository"
 
 export const commentsController = {
 
@@ -36,5 +37,16 @@ export const commentsController = {
             return
         }
         res.sendStatus(SETTINGS.HTTP_STATUSES.N0_CONTENT_204)
+    },
+
+    async findCommentById(req: RequestWithParams<URIParamsCommentIdModel>, res: Response) {
+        const foundComment = await commentsQueryRepository.findCommentById(req.params.id)
+        if (!foundComment) {
+            res.sendStatus(SETTINGS.HTTP_STATUSES.NOT_FOUND_404)
+            return
+        }
+        res
+            .status(SETTINGS.HTTP_STATUSES.OK_200)
+            .json(foundComment)
     }
 }
