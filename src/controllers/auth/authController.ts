@@ -17,7 +17,8 @@ export const authController = {
                 const accessToken = await jwtService.createJWTToken(result.data)
                 res
                     .status(SETTINGS.HTTP_STATUSES.OK_200)
-                    .json({ accessToken }) //передаст в формате json {accessToken: 'token'}
+                    .send(accessToken)
+                //.json({ accessToken }) //передаст в формате json {accessToken: 'token'}
             }
         } else {
             res.sendStatus(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)

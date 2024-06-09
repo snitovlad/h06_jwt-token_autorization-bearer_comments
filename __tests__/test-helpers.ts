@@ -1,6 +1,6 @@
 import { app } from '../src/app'
-import { agent } from 'supertest'
-// import request from "supertest"
+import { agent } from 'supertest'  //позволяет сохранять состояние между запросами
+// import request from "supertest"  //создаёт новый агент для каждого запроса.
 
 
 //agent будет следить за нашим backend, и через него будем делать какие-то запросы
