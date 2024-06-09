@@ -138,7 +138,7 @@ describe('/posts', () => {
         expect(res2.body.items).toEqual([])
     })
 
-    //не должен обновить с некорректными входными данными 
+    //не должен обновить пост с некорректными входными данными 
     it(`shouldn't update post with incorrect input data`, async () => {
         //создаем новый блог
         const newBlog = createNewBlog

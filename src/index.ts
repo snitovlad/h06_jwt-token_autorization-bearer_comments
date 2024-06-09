@@ -1,4 +1,5 @@
 import { app } from './app'
+import { db } from './db/db-sample'
 import { connectToDB } from './db/mongo-db'
 import { SETTINGS } from './settings'
 

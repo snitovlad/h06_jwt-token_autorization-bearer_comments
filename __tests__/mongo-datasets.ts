@@ -1,6 +1,5 @@
-import { BlogDBType } from './../src/db/db-type';
-import { MongoClient, ObjectId } from "mongodb"
 import { MongoMemoryServer } from 'mongodb-memory-server'
+import { db } from '../src/db/db-sample'
 import { blogCollection, client, connectToDB, postCollection, userCollection } from "../src/db/mongo-db"
 import { CreateBlogModel } from "../src/models/blogs-models/CreateBlogModel"
 import { SETTINGS } from "../src/settings"

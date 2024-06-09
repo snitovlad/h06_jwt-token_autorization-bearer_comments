@@ -14,8 +14,10 @@ export const authController = {
         const result = await authService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (result.status === ResultStatus.Success) {
             if (result.data) {
-                const token = await jwtService.createJWTToken(result.data)
-                res.status(SETTINGS.HTTP_STATUSES.OK_200).send(token)
+                const accessToken = await jwtService.createJWTToken(result.data)
+                res
+                    .status(SETTINGS.HTTP_STATUSES.OK_200)
+                    .json({ accessToken }) //передаст в формате json {accessToken: 'token'}
             }
         } else {
             res.sendStatus(SETTINGS.HTTP_STATUSES.UNAUTHORIZED_401)
