@@ -4,8 +4,9 @@ export const deleteAllDataRepository = {
     async deleteAllData(): Promise<{ success?: boolean }> {
 
         try {
-            await blogCollection.deleteMany({})
             await postCollection.deleteMany({})
+            await blogCollection.deleteMany({})
+
             await userCollection.deleteMany({})
             await commentCollection.deleteMany({})
             return { success: true }
